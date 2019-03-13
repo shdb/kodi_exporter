@@ -149,6 +149,14 @@ func (k *Client) VideoGetTVShows() (*VideoGetTVShowsResponse, error) {
 	return resp, err
 }
 
+// VideoGetEpisodes make a RPC call to retrieve all episodes
+func (k *Client) VideoGetEpisodes() (*VideoGetEpisodesResponse, error) {
+	resp := &VideoGetEpisodesResponse{}
+	params := map[string]interface{}{}
+	err := k.rpc("VideoLibrary.GetEpisodes", params, resp)
+	return resp, err
+}
+
 func (k *Client) videoGetGenres(videotype string) (*VideoGetGenresResponse, error) {
 	resp := &VideoGetGenresResponse{}
 	params := map[string]interface{}{

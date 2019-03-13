@@ -105,6 +105,21 @@ type VideoGetTVShowsResponse struct {
 	Result TVShowsResponse `json:"result,omitempty"`
 }
 
+type Episode struct {
+	EpisodeID int  `json:"episodeid"`
+	Label   string `json:"label,omitempty"`
+}
+
+type EpisodesResponse struct {
+	Movies []Episode           `json:"episodes,omitempty"`
+	Limits *ListLimitsReturned `json:"limits,omitempty"`
+}
+
+type VideoGetEpisodesResponse struct {
+	ResponseBase
+	Result TVShowsResponse `json:"result,omitempty"`
+}
+
 type Movie struct {
 	MovieID int    `json:"movieid"`
 	Label   string `json:"label,omitempty"`

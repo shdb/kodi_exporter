@@ -64,6 +64,11 @@ var (
 		"How many TV shows are in the video library.",
 		nil, nil,
 	)
+	episodeCount = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, "", "video_episodes"),
+		"How many episodes are in the video library.",
+		nil, nil,
+	)
 	// movieGenres = prometheus.NewDesc(
 	// 	prometheus.BuildFQName(namespace, "", "video_movies_genres"),
 	// 	"Genres for movies in the video library.",
@@ -125,6 +130,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- artistCount
 	ch <- albumCount
 	ch <- songCount
+	ch <- episodeCount
 	ch <- movieCount
 	ch <- tvshowCount
 	// ch <- movieGenres
@@ -221,6 +227,18 @@ func (e *Exporter) collectVideoMetrics(ch chan<- prometheus.Metric) {
 			tvshowCount, prometheus.GaugeValue, size,
 		)
 		log.Infof("TV Shows: %d", size)
+	}
+
+	episodesResp, err := e.Client.VideoGetEpisodes()
+	if err != nil || episodesResp.Error != nil {
+		// FIXME: How should we handle a partial failure like this?
+	} else {
+		//size := float64(len(episodesResp.Result.Episodes))
+		size := float64(episodesResp.Result.Limits.Total)
+		ch <- prometheus.MustNewConstMetric(
+			episodeCount, prometheus.GaugeValue, size,
+		)
+		log.Infof("Episodes: %d", size)
 	}
 
 	moviesGenresResp, err := e.Client.VideoGetMoviesGenres()
